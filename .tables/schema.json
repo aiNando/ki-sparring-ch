@@ -1,0 +1,69 @@
+[
+  {
+    "name": "kontakt_anfragen",
+    "fields": [
+      {
+        "name": "id",
+        "type": "text",
+        "description": "Unique ID"
+      },
+      {
+        "name": "name",
+        "type": "text",
+        "description": "Name der Person"
+      },
+      {
+        "name": "email",
+        "type": "text",
+        "description": "E-Mail Adresse"
+      },
+      {
+        "name": "firma",
+        "type": "text",
+        "description": "Unternehmensname"
+      },
+      {
+        "name": "interesse",
+        "type": "text",
+        "description": "Art der Anfrage",
+        "options": [
+          "ki-analyse",
+          "workshop",
+          "sparring",
+          "bildung",
+          "sonstiges"
+        ]
+      },
+      {
+        "name": "nachricht",
+        "type": "rich_text",
+        "description": "Nachrichteninhalt"
+      },
+      {
+        "name": "timestamp",
+        "type": "datetime",
+        "description": "Zeitstempel der Anfrage"
+      }
+    ]
+  },
+  {
+    "name": "newsletter",
+    "fields": [
+      {
+        "name": "id",
+        "type": "text",
+        "description": "Unique ID"
+      },
+      {
+        "name": "email",
+        "type": "text",
+        "description": "E-Mail Adresse des Abonnenten"
+      },
+      {
+        "name": "subscribed_at",
+        "type": "datetime",
+        "description": "Anmeldedatum"
+      }
+    ]
+  }
+]
