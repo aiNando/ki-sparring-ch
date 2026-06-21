@@ -1,6 +1,6 @@
-# aiNando — Nando Tschäppät Personal Brand Website v3
+# ki-sparring.ch — Nando Tschäppät Personal Brand Website v3
 
-> Premium Personal Brand & Conversion-Website für Nando Tschäppät (aiNando)
+> Premium Personal Brand & Conversion-Website für Nando Tschäppät (ki-sparring.ch)
 > Ziel: Anfragen für KI-Potenzialanalysen generieren
 
 ## Positionierung
@@ -100,12 +100,14 @@ README.md
 
 ---
 
-## 🔗 API (Datenbank)
+## 🔗 Form Handling
 
-| Endpunkt | Methode | Beschreibung |
+| Bereich | Verhalten | Beschreibung |
 |---|---|---|
-| `tables/kontakt_anfragen` | POST | Kontaktformular speichern |
-| `tables/newsletter` | POST | Newsletter-Anmeldung |
+| Kontaktformular | `mailto:`-Versand | Öffnet das Mailprogramm mit vorausgefüllter Anfrage an `iN@ndo.ch` |
+| Newsletter | `mailto:`-Versand | Öffnet das Mailprogramm mit der Newsletter-Anmeldung an `iN@ndo.ch` |
+
+Die PHP-Dateien liegen weiterhin im Projekt als Fallback, werden auf diesem Hosting aber nicht ausgeführt.
 
 ---
 
@@ -157,4 +159,4 @@ README.md
 
 ---
 
-*© 2026 Nando Tschäppät · aiNando · iN@ndo.ch*
+*© 2026 Nando Tschäppät · ki-sparring.ch · iN@ndo.ch*
