@@ -1,5 +1,5 @@
 /* ============================================================
-   aiNando — Main JavaScript v3
+   ki-sparring.ch — Main JavaScript v3
    Testimonial Carousel, Scroll Reveal, Nav, Forms, Canvas
    ============================================================ */
 'use strict';
@@ -287,12 +287,6 @@
   const successEl = document.getElementById('form-success');
   if (!form) return;
 
-  function openMailto(subject, lines) {
-    const body = lines.filter(Boolean).join('\n');
-    const url = `mailto:iN@ndo.ch?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-    window.location.href = url;
-  }
-
   form.addEventListener('submit', async e => {
     e.preventDefault();
     if (!form.checkValidity()) { form.reportValidity(); return; }
@@ -307,24 +301,27 @@
       nachricht: form.elements['nachricht'].value.trim(),
       timestamp: new Date().toISOString(),
     };
-    openMailto('Kontaktanfrage via ki-sparring.ch', [
-      'Kontaktanfrage via ki-sparring.ch',
-      '',
-      `Name: ${data.name}`,
-      `E-Mail: ${data.email}`,
-      `Firma: ${data.firma || '-'}`,
-      `Interesse: ${data.interesse}`,
-      '',
-      'Nachricht:',
-      data.nachricht,
-      '',
-      `Zeitpunkt: ${data.timestamp}`,
-    ]);
-    successEl.className = 'form-success success';
-    successEl.textContent = '✓ Ihr Mailprogramm öffnet sich jetzt mit der ausgefüllten Anfrage.';
-    form.reset();
-    submitBtn.classList.remove('loading');
-    submitBtn.disabled = false;
+    try {
+      const mailto = `mailto:iN@ndo.ch?subject=${encodeURIComponent('Kontaktanfrage via ki-sparring.ch')}&body=${encodeURIComponent([
+        'Kontaktanfrage via ki-sparring.ch',
+        '',
+        `Name: ${data.name}`,
+        `E-Mail: ${data.email}`,
+        `Firma: ${data.firma || '-'}`,
+        `Interesse: ${data.interesse}`,
+        '',
+        'Nachricht:',
+        data.nachricht,
+        '',
+        `Zeitpunkt: ${data.timestamp}`,
+      ].join('\n'))}`;
+      window.location.href = mailto;
+      successEl.className = 'form-success success';
+      successEl.textContent = '✓ Ihr Mailprogramm öffnet sich jetzt mit der ausgefüllten Anfrage.';
+      form.reset();
+    } finally {
+      submitBtn.classList.remove('loading'); submitBtn.disabled = false;
+    }
   });
 })();
 
@@ -337,15 +334,16 @@
     e.preventDefault();
     const email = form.elements['email'].value.trim();
     if (!email) return;
-    const subject = 'Newsletter-Anmeldung via ki-sparring.ch';
-    const body = [
-      'Bitte mich für den Newsletter eintragen.',
-      '',
-      `E-Mail: ${email}`,
-      `Zeitpunkt: ${new Date().toISOString()}`,
-    ].join('\n');
-    window.location.href = `mailto:iN@ndo.ch?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-    success.textContent = '✓ Ihr Mailprogramm öffnet sich jetzt mit der Anmeldung.';
-    form.reset();
+    success.textContent = '…';
+    try {
+      window.location.href = `mailto:iN@ndo.ch?subject=${encodeURIComponent('Newsletter-Anmeldung via ki-sparring.ch')}&body=${encodeURIComponent([
+        'Bitte mich für den Newsletter eintragen.',
+        '',
+        `E-Mail: ${email}`,
+        `Zeitpunkt: ${new Date().toISOString()}`,
+      ].join('\n'))}`;
+      success.textContent = '✓ Ihr Mailprogramm öffnet sich jetzt mit der Anmeldung.';
+      form.reset();
+    } catch { success.textContent = 'Fehler – bitte per Kontaktformular anmelden.'; }
   });
 })();

@@ -107,7 +107,7 @@ README.md
 | Kontaktformular | `mailto:`-Versand | Öffnet das Mailprogramm mit vorausgefüllter Anfrage an `iN@ndo.ch` |
 | Newsletter | `mailto:`-Versand | Öffnet das Mailprogramm mit der Newsletter-Anmeldung an `iN@ndo.ch` |
 
-Die PHP-Dateien liegen weiterhin im Projekt als Fallback, werden auf diesem Hosting aber nicht ausgeführt.
+Die früheren PHP- oder Tabellen-Endpunkte werden auf diesem Hosting nicht verwendet.
 
 ---
 
