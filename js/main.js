@@ -4,6 +4,9 @@
    ============================================================ */
 'use strict';
 
+const KI_SPARRING_CONFIG = window.KI_SPARRING_CONFIG || {};
+const BREVO_FORMS_ENDPOINT = KI_SPARRING_CONFIG.brevoFormsEndpoint || "https://deria.ch/api/brevo/forms";
+
 // ── 1. PROGRESS BAR ──────────────────────────────────────────
 (function() {
   const bar = document.createElement('div');
@@ -301,24 +304,30 @@
       nachricht: form.elements['nachricht'].value.trim(),
       timestamp: new Date().toISOString(),
     };
+
     try {
-      const mailto = `mailto:iN@ndo.ch?subject=${encodeURIComponent('Kontaktanfrage via ki-sparring.ch')}&body=${encodeURIComponent([
-        'Kontaktanfrage via ki-sparring.ch',
-        '',
-        `Name: ${data.name}`,
-        `E-Mail: ${data.email}`,
-        `Firma: ${data.firma || '-'}`,
-        `Interesse: ${data.interesse}`,
-        '',
-        'Nachricht:',
-        data.nachricht,
-        '',
-        `Zeitpunkt: ${data.timestamp}`,
-      ].join('\n'))}`;
-      window.location.href = mailto;
+      const response = await fetch(BREVO_FORMS_ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          kind: 'lead',
+          name: data.name,
+          email: data.email,
+          company: data.firma,
+          interest: data.interesse,
+          message: data.nachricht,
+          source: window.location.href,
+          timestamp: data.timestamp
+        })
+      });
+      const payload = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(payload.error || 'Formular konnte nicht gesendet werden.');
       successEl.className = 'form-success success';
-      successEl.textContent = '✓ Ihr Mailprogramm öffnet sich jetzt mit der ausgefüllten Anfrage.';
+      successEl.textContent = '✓ Ihre Anfrage wurde in Brevo erfasst.';
       form.reset();
+    } catch (error) {
+      successEl.className = 'form-success error';
+      successEl.textContent = error instanceof Error ? error.message : 'Fehler – bitte später erneut versuchen.';
     } finally {
       submitBtn.classList.remove('loading'); submitBtn.disabled = false;
     }
@@ -336,14 +345,22 @@
     if (!email) return;
     success.textContent = '…';
     try {
-      window.location.href = `mailto:iN@ndo.ch?subject=${encodeURIComponent('Newsletter-Anmeldung via ki-sparring.ch')}&body=${encodeURIComponent([
-        'Bitte mich für den Newsletter eintragen.',
-        '',
-        `E-Mail: ${email}`,
-        `Zeitpunkt: ${new Date().toISOString()}`,
-      ].join('\n'))}`;
-      success.textContent = '✓ Ihr Mailprogramm öffnet sich jetzt mit der Anmeldung.';
+      const response = await fetch(BREVO_FORMS_ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          kind: 'newsletter',
+          email,
+          source: window.location.href,
+          timestamp: new Date().toISOString()
+        })
+      });
+      const payload = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(payload.error || 'Newsletter konnte nicht gesendet werden.');
+      success.textContent = '✓ Bitte prüfen Sie Ihr E-Mail-Postfach für die Bestätigung.';
       form.reset();
-    } catch { success.textContent = 'Fehler – bitte per Kontaktformular anmelden.'; }
+    } catch (error) {
+      success.textContent = error instanceof Error ? error.message : 'Fehler – bitte später erneut versuchen.';
+    }
   });
 })();

@@ -18,6 +18,11 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" />
   <link rel="stylesheet" href="css/style.css" />
+  <script>
+    window.KI_SPARRING_CONFIG = {
+      brevoFormsEndpoint: "https://deria.ch/api/brevo/forms"
+    };
+  </script>
 </head>
 <body>
 
@@ -931,7 +936,7 @@
             <h3>Beobachtungen direkt ins Postfach</h3>
             <p>Kein Spam. Keine feste Frequenz. Nur wenn es sich lohnt.</p>
           </div>
-          <form class="newsletter-form" id="newsletter-form" aria-label="Newsletter-Anmeldung" action="mailto:iN@ndo.ch" method="post" novalidate>
+          <form class="newsletter-form" id="newsletter-form" aria-label="Newsletter-Anmeldung" novalidate>
             <div class="form-row">
               <input type="email" id="nl-email" name="email" placeholder="ihre@email.ch" aria-label="E-Mail-Adresse" required />
               <button type="submit" class="btn btn-primary">Abonnieren</button>
@@ -958,7 +963,7 @@
           </div>
 
           <div class="kontakt-grid">
-            <form class="kontakt-form reveal-up delay-2" id="kontakt-form" aria-label="Kontaktformular" action="mailto:iN@ndo.ch" method="post" novalidate>
+            <form class="kontakt-form reveal-up delay-2" id="kontakt-form" aria-label="Kontaktformular" novalidate>
               <div class="form-group">
                 <label for="kf-name">Name</label>
                 <input type="text" id="kf-name" name="name" placeholder="Ihr Name" required autocomplete="name" />
