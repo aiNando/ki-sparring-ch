@@ -93,8 +93,15 @@ images/
   testimonial-*-v2.*          → 9 Testimonial-Avatare (eager loading)
   logos/
     logo-apple.png            → Apple Logo PNG
+  kmu-step-1…6.jpg            → Bilder «Was Sie nach 90 Min. wissen»
+blog/                         → Blog-Übersicht und Artikel
+ueber-nando/index.html        → Ausführliches Profil
 impressum/index.html          → Schweizer Impressum
 datenschutz/index.html        → Swiss DSG Datenschutz
+ndo.html                      → Seite für ndo.ch (gleicher Webspace, nicht löschen)
+sitemap.xml, robots.txt
+.htaccess                     → HTTPS- und www-Weiterleitung
+docs/DEPLOYMENT.md            → Live-Abgleich & Deployment (wird nicht ausgeliefert)
 README.md
 ```
 
@@ -102,12 +109,12 @@ README.md
 
 ## 🔗 Form Handling
 
-| Bereich | Verhalten | Beschreibung |
-|---|---|---|
-| Kontaktformular | `mailto:`-Versand | Öffnet das Mailprogramm mit vorausgefüllter Anfrage an `iN@ndo.ch` |
-| Newsletter | `mailto:`-Versand | Öffnet das Mailprogramm mit der Newsletter-Anmeldung an `iN@ndo.ch` |
+| Bereich | Verhalten |
+|---|---|
+| Kontaktformular | `POST` (JSON, `kind: lead`) an `https://api.cleverassistant.ch/api/brevo/forms` → Brevo. Bei Fehler/Timeout: vorausgefüllte E-Mail an `iN@ndo.ch` |
+| Newsletter | `POST` (JSON, `kind: newsletter`) an denselben Endpunkt → Brevo Double-Opt-in |
 
-Die früheren PHP- oder Tabellen-Endpunkte werden auf diesem Hosting nicht verwendet.
+Endpunkt überschreibbar via `window.KI_SPARRING_CONFIG.brevoFormsEndpoint` in `index.html`. Das Backend liegt nicht in diesem Repo.
 
 ---
 
@@ -148,14 +155,14 @@ Die früheren PHP- oder Tabellen-Endpunkte werden auf diesem Hosting nicht verwe
 1. **Logo-Uploads** — METANET, WISS, IBAW, Klubschule, aiaibot als echte PNG/SVG-Logos
 2. **Swisscom Logo** — bessere Version hochladen (`.lb-img-swisscom` mit `mix-blend-mode: multiply` ist vorbereitet)
 3. **Calendly/Cal.com** — direkte Terminbuchung im CTA
-4. **Blog-Seiten** für Beobachtungen-Artikel
 5. **Analytics** — Plausible oder Matomo
 
 ---
 
 ## 🚀 Deployment
 
-→ **Publish Tab** in Genspark verwenden.
+Hosting: Infomaniak (Apache). Live-Abgleich, Empfehlung zum Deployment-Muster und offene Entscheide: [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md).
+Änderungen nur per Pull Request; veröffentlicht wird erst nach Nandos Freigabe.
 
 ---
 
