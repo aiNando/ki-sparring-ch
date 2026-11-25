@@ -15,7 +15,14 @@ const BREVO_FORMS_ENDPOINT = KI_SPARRING_CONFIG.brevoFormsEndpoint || "https://a
 const FORMALITY_STORAGE_KEY = 'ki-sparring-formality';
 const FORMALITY_MODAL = document.getElementById('formality-modal');
 const FORMALITY_TRIGGER = document.getElementById('formality-trigger');
+// Die Du-Umstellung ersetzt Textstellen automatisch. Sie läuft nur auf der
+// Startseite (dort gibt es den Auswahl-Dialog): In den Blogartikeln steht
+// "Sie" oft für "sie" (Plural) und würde zu "du" verfälscht.
+const FORMALITY_CONVERSION_ENABLED = Boolean(FORMALITY_MODAL);
 const FORMALITY_REPLACEMENTS = [
+  [/haben Sie einen priorisierten Fahrplan, den Sie sofort nutzen können/g, 'hast du einen priorisierten Fahrplan, den du sofort nutzen kannst'],
+  [/damit Sie mit dem Richtigen beginnen/g, 'damit du mit dem Richtigen beginnst'],
+  [/den Sie selbst oder mit Unterstützung umsetzen können/g, 'den du selbst oder mit Unterstützung umsetzen kannst'],
   [/Lassen Sie uns/g, 'Lass uns'],
   [/Was Sie nach/g, 'Was du nach'],
   [/Was Sie mitnehmen/g, 'Was du mitnimmst'],
@@ -95,7 +102,7 @@ function setFormalityPreference(formality) {
     localStorage.setItem(FORMALITY_STORAGE_KEY, normalized);
   } catch (error) {}
   updateFormalityPlaceholders(normalized);
-  if (normalized === 'du') convertToDuLanguage();
+  if (normalized === 'du' && FORMALITY_CONVERSION_ENABLED) convertToDuLanguage();
 }
 
 function initFormalityPreference() {
