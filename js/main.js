@@ -418,6 +418,53 @@ if (FORMALITY_TRIGGER) {
   }, { threshold: 0.1 }).observe(list);
 })();
 
+// ── FORM-VERSAND MIT FALLBACK ────────────────────────────────
+// Fällt der Formular-Endpunkt aus (z. B. HTTP 502), geht die Anfrage
+// nicht verloren: Wir bieten eine vorausgefüllte E-Mail an.
+const CONTACT_EMAIL = 'iN@ndo.ch';
+const FORM_TIMEOUT_MS = 15000;
+
+async function postForm(body) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), FORM_TIMEOUT_MS);
+  try {
+    return await fetch(BREVO_FORMS_ENDPOINT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+      signal: controller.signal
+    });
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+function showFormFallback(target, data) {
+  const du = getFormalityPreference() === 'du';
+  const lines = [
+    data.nachricht,
+    '',
+    'Name: ' + data.name,
+    'E-Mail: ' + data.email,
+    data.phone ? 'Telefon: ' + data.phone : '',
+    data.firma ? 'Firma: ' + data.firma : '',
+    data.interesse ? 'Interesse: ' + data.interesse : '',
+    data.kontaktmethode ? 'Bevorzugte Kontaktmethode: ' + data.kontaktmethode : ''
+  ].filter((line, i) => i < 2 || line);
+  const href = 'mailto:' + CONTACT_EMAIL
+    + '?subject=' + encodeURIComponent('Anfrage über ki-sparring.ch')
+    + '&body=' + encodeURIComponent(lines.join('\n'));
+
+  target.textContent = du
+    ? 'Das Formular konnte gerade nicht gesendet werden. Deine Angaben sind noch da – '
+    : 'Das Formular konnte gerade nicht gesendet werden. Ihre Angaben sind noch da – ';
+  const link = document.createElement('a');
+  link.href = href;
+  link.textContent = du ? 'schick sie mir direkt per E-Mail' : 'senden Sie sie mir direkt per E-Mail';
+  target.appendChild(link);
+  target.appendChild(document.createTextNode(' (' + CONTACT_EMAIL + ').'));
+}
+
 // ── 10. KONTAKT FORM ──────────────────────────────────────────
 (function() {
   const form      = document.getElementById('kontakt-form');
@@ -443,10 +490,7 @@ if (FORMALITY_TRIGGER) {
     };
 
     try {
-      const response = await fetch(BREVO_FORMS_ENDPOINT, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
+      const response = await postForm({
           kind: 'lead',
           name: data.name,
           email: data.email,
@@ -457,7 +501,6 @@ if (FORMALITY_TRIGGER) {
           message: data.nachricht,
           source: window.location.href,
           timestamp: data.timestamp
-        })
       });
       const payload = await response.json().catch(() => ({}));
       if (!response.ok) throw new Error(payload.error || 'Formular konnte nicht gesendet werden.');
@@ -469,7 +512,7 @@ if (FORMALITY_TRIGGER) {
       updateFormalityPlaceholders(getFormalityPreference());
     } catch (error) {
       successEl.className = 'form-success error';
-      successEl.textContent = error instanceof Error ? error.message : 'Fehler – bitte später erneut versuchen.';
+      showFormFallback(successEl, data);
     } finally {
       submitBtn.classList.remove('loading'); submitBtn.disabled = false;
     }
@@ -487,15 +530,11 @@ if (FORMALITY_TRIGGER) {
     if (!email) return;
     success.textContent = '…';
     try {
-      const response = await fetch(BREVO_FORMS_ENDPOINT, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          kind: 'newsletter',
-          email,
-          source: window.location.href,
-          timestamp: new Date().toISOString()
-        })
+      const response = await postForm({
+        kind: 'newsletter',
+        email,
+        source: window.location.href,
+        timestamp: new Date().toISOString()
       });
       const payload = await response.json().catch(() => ({}));
       if (!response.ok) throw new Error(payload.error || 'Newsletter konnte nicht gesendet werden.');
@@ -504,7 +543,9 @@ if (FORMALITY_TRIGGER) {
         : '✓ Bitte prüfen Sie Ihr E-Mail-Postfach für die Bestätigung.';
       form.reset();
     } catch (error) {
-      success.textContent = error instanceof Error ? error.message : 'Fehler – bitte später erneut versuchen.';
+      success.textContent = getFormalityPreference() === 'du'
+        ? 'Die Anmeldung hat gerade nicht geklappt. Bitte versuch es später nochmals oder schreib an ' + CONTACT_EMAIL + '.'
+        : 'Die Anmeldung hat gerade nicht geklappt. Bitte versuchen Sie es später nochmals oder schreiben Sie an ' + CONTACT_EMAIL + '.';
     }
   });
 })();
