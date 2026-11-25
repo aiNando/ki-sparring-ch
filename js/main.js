@@ -4,8 +4,150 @@
    ============================================================ */
 'use strict';
 
+const HOSTNAME = window.location.hostname.replace(/^www\./, '').toLowerCase();
+
+if (HOSTNAME === 'ndo.ch' && window.location.pathname === '/') {
+  window.location.replace('/ndo.html');
+}
+
 const KI_SPARRING_CONFIG = window.KI_SPARRING_CONFIG || {};
-const BREVO_FORMS_ENDPOINT = KI_SPARRING_CONFIG.brevoFormsEndpoint || "https://deria.ch/api/brevo/forms";
+const BREVO_FORMS_ENDPOINT = KI_SPARRING_CONFIG.brevoFormsEndpoint || "https://api.cleverassistant.ch/api/brevo/forms";
+const FORMALITY_STORAGE_KEY = 'ki-sparring-formality';
+const FORMALITY_MODAL = document.getElementById('formality-modal');
+const FORMALITY_TRIGGER = document.getElementById('formality-trigger');
+// Die Du-Umstellung ersetzt Textstellen automatisch. Sie läuft nur auf der
+// Startseite (dort gibt es den Auswahl-Dialog): In den Blogartikeln steht
+// "Sie" oft für "sie" (Plural) und würde zu "du" verfälscht.
+const FORMALITY_CONVERSION_ENABLED = Boolean(FORMALITY_MODAL);
+const FORMALITY_REPLACEMENTS = [
+  [/haben Sie einen priorisierten Fahrplan, den Sie sofort nutzen können/g, 'hast du einen priorisierten Fahrplan, den du sofort nutzen kannst'],
+  [/damit Sie mit dem Richtigen beginnen/g, 'damit du mit dem Richtigen beginnst'],
+  [/den Sie selbst oder mit Unterstützung umsetzen können/g, 'den du selbst oder mit Unterstützung umsetzen kannst'],
+  [/Lassen Sie uns/g, 'Lass uns'],
+  [/Was Sie nach/g, 'Was du nach'],
+  [/Was Sie mitnehmen/g, 'Was du mitnimmst'],
+  [/Was beschäftigt Sie gerade\?/g, 'Was beschäftigt dich gerade?'],
+  [/Sie erhalten/g, 'Du erhältst'],
+  [/Sie schreiben mir, was Sie beschäftigt\./g, 'Du schreibst mir, was dich beschäftigt.'],
+  [/Bitte prüfen Sie Ihr E-Mail-Postfach für die Bestätigung\./g, 'Bitte prüf dein E-Mail-Postfach für die Bestätigung.'],
+  [/Ihre Anfrage/g, 'deine Anfrage'],
+  [/Ihrem Unternehmen/g, 'deinem Unternehmen'],
+  [/Ihr Unternehmen/g, 'dein Unternehmen'],
+  [/Ihre Arbeit/g, 'deine Arbeit'],
+  [/Ihnen/g, 'dir'],
+  [/Ihrem/g, 'deinem'],
+  [/Ihre/g, 'deine'],
+  [/Ihrer/g, 'deiner'],
+  [/Ihren/g, 'deinen'],
+  [/\bSie\b/g, 'du'],
+  [/\bIhr\b/g, 'dein']
+];
+
+function getFormalityPreference() {
+  return document.documentElement.dataset.formality === 'du' ? 'du' : 'sie';
+}
+
+function updateFormalityPlaceholders(formality) {
+  document.querySelectorAll('[data-placeholder-sie][data-placeholder-du]').forEach(el => {
+    const key = formality === 'du' ? 'placeholderDu' : 'placeholderSie';
+    const value = el.dataset[key];
+    if (value) el.setAttribute('placeholder', value);
+  });
+}
+
+function convertToDuLanguage() {
+  const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, {
+    acceptNode(node) {
+      const text = node.nodeValue || '';
+      if (!text.trim()) return NodeFilter.FILTER_REJECT;
+      const parent = node.parentElement;
+      if (!parent) return NodeFilter.FILTER_REJECT;
+      if (parent.closest('.formality-modal, script, style, noscript, textarea')) return NodeFilter.FILTER_REJECT;
+      return NodeFilter.FILTER_ACCEPT;
+    }
+  });
+
+  const nodes = [];
+  while (walker.nextNode()) nodes.push(walker.currentNode);
+
+  nodes.forEach(node => {
+    let text = node.nodeValue;
+    FORMALITY_REPLACEMENTS.forEach(([pattern, replacement]) => {
+      text = text.replace(pattern, replacement);
+    });
+    node.nodeValue = text;
+  });
+}
+
+function openFormalityModal() {
+  if (!FORMALITY_MODAL) return;
+  FORMALITY_MODAL.hidden = false;
+  FORMALITY_MODAL.setAttribute('aria-hidden', 'false');
+  document.body.style.overflow = 'hidden';
+  const firstButton = FORMALITY_MODAL.querySelector('[data-formality-choice]');
+  if (firstButton) firstButton.focus();
+}
+
+function closeFormalityModal() {
+  if (!FORMALITY_MODAL) return;
+  FORMALITY_MODAL.hidden = true;
+  FORMALITY_MODAL.setAttribute('aria-hidden', 'true');
+  document.body.style.overflow = '';
+}
+
+function setFormalityPreference(formality) {
+  const normalized = formality === 'du' ? 'du' : 'sie';
+  document.documentElement.dataset.formality = normalized;
+  try {
+    localStorage.setItem(FORMALITY_STORAGE_KEY, normalized);
+  } catch (error) {}
+  updateFormalityPlaceholders(normalized);
+  if (normalized === 'du' && FORMALITY_CONVERSION_ENABLED) convertToDuLanguage();
+}
+
+function initFormalityPreference() {
+  let stored = null;
+  try {
+    stored = localStorage.getItem(FORMALITY_STORAGE_KEY);
+  } catch (error) {
+    stored = null;
+  }
+
+  if (stored === 'du' || stored === 'sie') {
+    setFormalityPreference(stored);
+    closeFormalityModal();
+    return;
+  }
+
+  document.documentElement.dataset.formality = 'sie';
+  updateFormalityPlaceholders('sie');
+  openFormalityModal();
+}
+
+initFormalityPreference();
+
+if (FORMALITY_MODAL) {
+  FORMALITY_MODAL.querySelectorAll('[data-formality-choice]').forEach(button => {
+    button.addEventListener('click', () => {
+      const formality = button.getAttribute('data-formality-choice') || 'sie';
+      setFormalityPreference(formality);
+      closeFormalityModal();
+      if (formality === 'sie') {
+        window.location.reload();
+      }
+    });
+  });
+}
+
+if (FORMALITY_TRIGGER) {
+  FORMALITY_TRIGGER.addEventListener('click', () => {
+    try {
+      localStorage.removeItem(FORMALITY_STORAGE_KEY);
+    } catch (error) {}
+    document.documentElement.dataset.formality = 'sie';
+    openFormalityModal();
+  });
+}
 
 // ── 1. PROGRESS BAR ──────────────────────────────────────────
 (function() {
@@ -283,6 +425,69 @@ const BREVO_FORMS_ENDPOINT = KI_SPARRING_CONFIG.brevoFormsEndpoint || "https://d
   }, { threshold: 0.1 }).observe(list);
 })();
 
+// ── KI-BOOST: AKTIONSPREIS & VORAUSWAHL ──────────────────────
+// Ab 1.1.2027 (Schweizer Zeit) automatisch den regulären Preis zeigen.
+(function() {
+  const PROMO_END = new Date('2027-01-01T00:00:00+01:00');
+  if (new Date() >= PROMO_END) {
+    document.querySelectorAll('[data-promo]').forEach(el => { el.hidden = true; });
+    document.querySelectorAll('[data-promo-after]').forEach(el => { el.hidden = false; });
+  }
+  document.querySelectorAll('a[data-interesse]').forEach(link => {
+    link.addEventListener('click', () => {
+      const select = document.getElementById('kf-interesse');
+      if (select) select.value = link.dataset.interesse;
+    });
+  });
+})();
+
+// ── FORM-VERSAND MIT FALLBACK ────────────────────────────────
+// Fällt der Formular-Endpunkt aus (z. B. HTTP 502), geht die Anfrage
+// nicht verloren: Wir bieten eine vorausgefüllte E-Mail an.
+const CONTACT_EMAIL = 'iN@ndo.ch';
+const FORM_TIMEOUT_MS = 15000;
+
+async function postForm(body) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), FORM_TIMEOUT_MS);
+  try {
+    return await fetch(BREVO_FORMS_ENDPOINT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+      signal: controller.signal
+    });
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+function showFormFallback(target, data) {
+  const du = getFormalityPreference() === 'du';
+  const lines = [
+    data.nachricht,
+    '',
+    'Name: ' + data.name,
+    'E-Mail: ' + data.email,
+    data.phone ? 'Telefon: ' + data.phone : '',
+    data.firma ? 'Firma: ' + data.firma : '',
+    data.interesse ? 'Interesse: ' + data.interesse : '',
+    data.kontaktmethode ? 'Bevorzugte Kontaktmethode: ' + data.kontaktmethode : ''
+  ].filter((line, i) => i < 2 || line);
+  const href = 'mailto:' + CONTACT_EMAIL
+    + '?subject=' + encodeURIComponent('Anfrage über ki-sparring.ch')
+    + '&body=' + encodeURIComponent(lines.join('\n'));
+
+  target.textContent = du
+    ? 'Das Formular konnte gerade nicht gesendet werden. Deine Angaben sind noch da – '
+    : 'Das Formular konnte gerade nicht gesendet werden. Ihre Angaben sind noch da – ';
+  const link = document.createElement('a');
+  link.href = href;
+  link.textContent = du ? 'schick sie mir direkt per E-Mail' : 'senden Sie sie mir direkt per E-Mail';
+  target.appendChild(link);
+  target.appendChild(document.createTextNode(' (' + CONTACT_EMAIL + ').'));
+}
+
 // ── 10. KONTAKT FORM ──────────────────────────────────────────
 (function() {
   const form      = document.getElementById('kontakt-form');
@@ -299,35 +504,38 @@ const BREVO_FORMS_ENDPOINT = KI_SPARRING_CONFIG.brevoFormsEndpoint || "https://d
     const data = {
       name:      form.elements['name'].value.trim(),
       email:     form.elements['email'].value.trim(),
+      phone:     form.elements['phone'].value.trim(),
       firma:     form.elements['firma'].value.trim(),
       interesse: form.elements['interesse'].value,
+      kontaktmethode: form.elements['kontaktmethode'].value,
       nachricht: form.elements['nachricht'].value.trim(),
       timestamp: new Date().toISOString(),
     };
 
     try {
-      const response = await fetch(BREVO_FORMS_ENDPOINT, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
+      const response = await postForm({
           kind: 'lead',
           name: data.name,
           email: data.email,
+          phone: data.phone,
           company: data.firma,
           interest: data.interesse,
+          preferredContactMethod: data.kontaktmethode,
           message: data.nachricht,
           source: window.location.href,
           timestamp: data.timestamp
-        })
       });
       const payload = await response.json().catch(() => ({}));
       if (!response.ok) throw new Error(payload.error || 'Formular konnte nicht gesendet werden.');
       successEl.className = 'form-success success';
-      successEl.textContent = '✓ Ihre Anfrage wurde in Brevo erfasst.';
+      successEl.textContent = getFormalityPreference() === 'du'
+        ? '✓ Vielen Dank für deine Anfrage.'
+        : '✓ Vielen Dank für Ihre Anfrage.';
       form.reset();
+      updateFormalityPlaceholders(getFormalityPreference());
     } catch (error) {
       successEl.className = 'form-success error';
-      successEl.textContent = error instanceof Error ? error.message : 'Fehler – bitte später erneut versuchen.';
+      showFormFallback(successEl, data);
     } finally {
       submitBtn.classList.remove('loading'); submitBtn.disabled = false;
     }
@@ -345,22 +553,22 @@ const BREVO_FORMS_ENDPOINT = KI_SPARRING_CONFIG.brevoFormsEndpoint || "https://d
     if (!email) return;
     success.textContent = '…';
     try {
-      const response = await fetch(BREVO_FORMS_ENDPOINT, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          kind: 'newsletter',
-          email,
-          source: window.location.href,
-          timestamp: new Date().toISOString()
-        })
+      const response = await postForm({
+        kind: 'newsletter',
+        email,
+        source: window.location.href,
+        timestamp: new Date().toISOString()
       });
       const payload = await response.json().catch(() => ({}));
       if (!response.ok) throw new Error(payload.error || 'Newsletter konnte nicht gesendet werden.');
-      success.textContent = '✓ Bitte prüfen Sie Ihr E-Mail-Postfach für die Bestätigung.';
+      success.textContent = getFormalityPreference() === 'du'
+        ? '✓ Bitte prüf dein E-Mail-Postfach für die Bestätigung.'
+        : '✓ Bitte prüfen Sie Ihr E-Mail-Postfach für die Bestätigung.';
       form.reset();
     } catch (error) {
-      success.textContent = error instanceof Error ? error.message : 'Fehler – bitte später erneut versuchen.';
+      success.textContent = getFormalityPreference() === 'du'
+        ? 'Die Anmeldung hat gerade nicht geklappt. Bitte versuch es später nochmals oder schreib an ' + CONTACT_EMAIL + '.'
+        : 'Die Anmeldung hat gerade nicht geklappt. Bitte versuchen Sie es später nochmals oder schreiben Sie an ' + CONTACT_EMAIL + '.';
     }
   });
 })();
