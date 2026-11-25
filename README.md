@@ -162,7 +162,7 @@ Endpunkt überschreibbar via `window.KI_SPARRING_CONFIG.brevoFormsEndpoint` in `
 ## 🚀 Deployment
 
 Hosting: Infomaniak (Apache). Live-Abgleich, Empfehlung zum Deployment-Muster und offene Entscheide: [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md).
-Änderungen nur per Pull Request; veröffentlicht wird erst nach Nandos Freigabe.
+Änderungen nur per Pull Request. Nach dem Merge lädt Grok per Infomaniak WebFTP hoch (Ablauf: `docs/DEPLOYMENT.md`, Abschnitt 5).
 
 ---
 
