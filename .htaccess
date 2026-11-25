@@ -1,5 +1,18 @@
 RewriteEngine On
 
+# Kanonische Adresse: https://ki-sparring.ch (ohne www)
+# Nur für ki-sparring.ch-Hosts: Der gleiche Webspace liefert auch ndo.html aus.
+
+# www -> ohne www (immer HTTPS)
 RewriteCond %{HTTP_HOST} ^www\.ki-sparring\.ch$ [NC]
 RewriteRule ^ https://ki-sparring.ch%{REQUEST_URI} [L,R=301]
 
+# HTTP -> HTTPS (beide Bedingungen, damit hinter dem Infomaniak-Proxy keine Schleife entsteht)
+RewriteCond %{HTTP_HOST} ^ki-sparring\.ch$ [NC]
+RewriteCond %{HTTPS} !=on
+RewriteCond %{HTTP:X-Forwarded-Proto} !=https
+RewriteRule ^ https://ki-sparring.ch%{REQUEST_URI} [L,R=301]
+
+# Repo-Dateien, die nicht öffentlich sein sollen
+RewriteRule ^(\.tables|docs)(/|$) - [F,L]
+RewriteRule (^|/)[^/]+\.md$ - [F,L]
