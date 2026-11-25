@@ -425,6 +425,22 @@ if (FORMALITY_TRIGGER) {
   }, { threshold: 0.1 }).observe(list);
 })();
 
+// ── KI-BOOST: AKTIONSPREIS & VORAUSWAHL ──────────────────────
+// Ab 1.1.2027 (Schweizer Zeit) automatisch den regulären Preis zeigen.
+(function() {
+  const PROMO_END = new Date('2027-01-01T00:00:00+01:00');
+  if (new Date() >= PROMO_END) {
+    document.querySelectorAll('[data-promo]').forEach(el => { el.hidden = true; });
+    document.querySelectorAll('[data-promo-after]').forEach(el => { el.hidden = false; });
+  }
+  document.querySelectorAll('a[data-interesse]').forEach(link => {
+    link.addEventListener('click', () => {
+      const select = document.getElementById('kf-interesse');
+      if (select) select.value = link.dataset.interesse;
+    });
+  });
+})();
+
 // ── FORM-VERSAND MIT FALLBACK ────────────────────────────────
 // Fällt der Formular-Endpunkt aus (z. B. HTTP 502), geht die Anfrage
 // nicht verloren: Wir bieten eine vorausgefüllte E-Mail an.

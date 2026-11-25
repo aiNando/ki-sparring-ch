@@ -689,6 +689,19 @@ html:not([data-formality="du"]) .formality-du { display: none !important; }
 .price-reassurance { font-size: .76rem; color: rgba(255,255,255,.4); display: flex; align-items: flex-start; gap: 8px; line-height: 1.5; }
 .price-reassurance i { color: var(--gold); margin-top: 2px; flex-shrink: 0; }
 
+/* KI-Boost */
+.analyse-price-card [hidden] { display: none !important; }
+.section-boost { border-top: 1px solid rgba(255,255,255,.08); }
+.boost-outcome { font-family: var(--font-serif); font-size: clamp(1.1rem, 2vw, 1.3rem); color: var(--white); line-height: 1.45; }
+.section-boost .price-display { flex-wrap: wrap; column-gap: 12px; }
+.section-boost .price-number { white-space: nowrap; }
+.price-regular { font-size: .85rem; color: rgba(255,255,255,.45); white-space: nowrap; }
+.price-guarantee { padding-top: 16px; border-top: 1px solid rgba(255,255,255,.12); display: flex; flex-direction: column; gap: 8px; }
+.price-guarantee strong { font-size: .82rem; font-weight: 600; color: var(--white); display: flex; align-items: center; gap: 8px; }
+.price-guarantee strong i { color: var(--gold); }
+.price-guarantee p { font-size: .8rem; color: rgba(255,255,255,.6); line-height: 1.5; }
+.price-guarantee .price-guarantee-terms { font-size: .72rem; color: rgba(255,255,255,.4); }
+
 /* ── 10. ABLAUF ──────────────────────────────────────────────── */
 .section-ablauf { background: var(--cream); }
 .section-ablauf .section-headline { margin-bottom: 12px; }
@@ -1294,6 +1307,8 @@ html:not([data-formality="du"]) .formality-du { display: none !important; }
   .ws-format-grid { grid-template-columns: repeat(2, 1fr); }
   .pos-grid { grid-template-columns: 320px 1fr; }
   .warum-grid { grid-template-columns: 1fr; }
+  .nav-link { padding: 7px 7px; }
+  .nav-link, .nav-cta { white-space: nowrap; }
 }
 @media (max-width: 900px) {
   .hero-inner { grid-template-columns: 1fr; }
@@ -1316,13 +1331,16 @@ html:not([data-formality="du"]) .formality-du { display: none !important; }
   .trust-sep:nth-child(4) { display: none; }
   .trust-sub { max-width: 140px; }
 }
-@media (max-width: 640px) {
-  :root { --gap: 60px; }
+/* Burger-Menü ab 860px: Mit KI-Boost passen 7 Links nicht mehr in eine Zeile */
+@media (max-width: 860px) {
   .nav-toggle { display: flex; }
   .nav-links { position: fixed; top: var(--nav-h); left: 0; right: 0; background: rgba(247,245,240,.98); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); flex-direction: column; align-items: stretch; padding: 10px 14px 18px; gap: 3px; border-top: 1px solid var(--ink-15); transform: translateY(-110%); opacity: 0; transition: transform .4s var(--ease), opacity .4s var(--ease); pointer-events: none; box-shadow: 0 20px 40px rgba(17,17,17,.08); }
   .nav-links.open { transform: translateY(0); opacity: 1; pointer-events: all; }
   .nav-link, .nav-cta { padding: 11px 13px; border-radius: 10px; text-align: left; margin: 0; }
   .nav-cta { margin-top: 5px; text-align: center; display: block; }
+}
+@media (max-width: 640px) {
+  :root { --gap: 60px; }
 
   .hero-kpis { flex-direction: column; gap: 0; width: 100%; padding: 14px; align-items: stretch; }
   .kpi-item { padding: 10px 0; width: 100%; align-items: center; text-align: center; }
