@@ -5,12 +5,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ki-sparring.ch – KI-Potenzialanalyse für Schweizer KMU</title>
   <meta name="description" content="KI-Potenzialanalyse für Schweizer KMU: In 90 Minuten identifizieren wir 5 bis 10 wirksame KI-Anwendungsfälle, priorisieren nächste Schritte und schaffen Klarheit." />
-  <meta name="keywords" content="KI-Potenzialanalyse, Schweizer KMU, KI Beratung Schweiz, KI Workshop Schweiz, KI Sparring, KI Anwendungen Unternehmen" />
   <meta property="og:title" content="Nando Tschäppät – KI-Potenzialanalyse für Schweizer KMU" />
   <meta property="og:description" content="In 90 Minuten identifizieren wir 5 bis 10 wirksame KI-Anwendungsfälle. Pragmatisch, verständlich, ohne Hype. Einstieg ab CHF 690." />
   <meta property="og:type" content="website" />
-  <meta property="og:image" content="images/nando-portrait-outdoor.jpg" />
+  <meta property="og:url" content="https://ki-sparring.ch/" />
+  <meta property="og:image" content="https://ki-sparring.ch/images/nando-portrait-outdoor.jpg" />
   <meta name="robots" content="index, follow" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Nando Tschäppät – KI-Potenzialanalyse für Schweizer KMU" />
+  <meta name="twitter:description" content="In 90 Minuten identifizieren wir 5 bis 10 wirksame KI-Anwendungsfälle. Pragmatisch, verständlich, ohne Hype." />
+  <meta name="twitter:image" content="https://ki-sparring.ch/images/nando-portrait-outdoor.jpg" />
+  <meta name="theme-color" content="#F7F5F0" />
   <link rel="canonical" href="https://ki-sparring.ch/" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -20,11 +25,23 @@
   <link rel="stylesheet" href="css/style.css" />
   <script>
     window.KI_SPARRING_CONFIG = {
-      brevoFormsEndpoint: "https://deria.ch/api/brevo/forms"
+      brevoFormsEndpoint: "https://api.cleverassistant.ch/api/brevo/forms"
     };
   </script>
 </head>
 <body>
+  <div class="formality-modal" id="formality-modal" hidden aria-hidden="true">
+    <div class="formality-modal__backdrop" aria-hidden="true"></div>
+    <div class="formality-modal__panel" role="dialog" aria-modal="true" aria-labelledby="formality-title">
+      <p class="formality-modal__eyebrow">Kurz vor dem Start</p>
+      <h2 id="formality-title">Sind wir per Du oder willst du lieber gesiezt werden?</h2>
+      <p>Ich passe die Ansprache auf der ganzen Seite entsprechend an.</p>
+      <div class="formality-modal__actions">
+        <button type="button" class="btn btn-primary" data-formality-choice="du">Gerne per Du</button>
+        <button type="button" class="btn btn-ghost" data-formality-choice="sie">Lieber per Sie</button>
+      </div>
+    </div>
+  </div>
 
   <!-- ░░ NAVIGATION ░░ -->
   <nav id="nav" aria-label="Hauptnavigation">
@@ -41,6 +58,7 @@
         <li><a href="#warum-nando" class="nav-link">Erfahrung</a></li>
         <li><a href="#testimonials" class="nav-link">Stimmen</a></li>
         <li><a href="#workshops" class="nav-link">Workshops</a></li>
+        <li><a href="/blog/" class="nav-link">Blog</a></li>
         <li><a href="#kontakt" class="nav-cta">KI-Analyse anfragen</a></li>
       </ul>
     </div>
@@ -251,6 +269,10 @@
             <blockquote class="inline-quote reveal-up delay-5">
               <p>«KI ist keine Frage der Grösse. Es ist eine Frage des richtigen Einstiegs.»</p>
             </blockquote>
+            <div class="author-actions reveal-up delay-5">
+              <a href="/ueber-nando/" class="btn btn-primary">Ausführliches Profil</a>
+              <a href="/blog/" class="btn btn-ghost">Zum Blog</a>
+            </div>
           </div>
         </div>
       </div>
@@ -418,44 +440,74 @@
           <div>
             <span class="section-label reveal-up">Was Sie mitnehmen</span>
             <h2 class="section-headline reveal-up delay-1">
-              Was Sie nach<br />90 Minuten wissen
+              <span class="formality-sie">Was Sie nach</span><span class="formality-du">Was du nach</span><br />90 Minuten wissen
             </h2>
             <p class="kmu-intro-statement reveal-up delay-2">
               KI soll Ihre Arbeit erleichtern — nicht ersetzen.<br />
-              <span>Die besten KI-Anwendungen schaffen nicht mehr Komplexität. Sie schaffen Entlastung.</span>
+              <span>Die besten KI-Anwendungen sorgen für Entlastung statt für zusätzliche Komplexität.</span>
             </p>
           </div>
         </div>
         <div class="kmu-grid">
-          <article class="kmu-card reveal-up delay-1">
-            <div class="kmu-icon" aria-hidden="true"><i class="fa-solid fa-bullseye" aria-hidden="true"></i></div>
-            <h3>Wo KI wirklich Sinn macht</h3>
-            <p>Konkrete Stellen in Ihrem Unternehmen, wo KI Entlastung, Klarheit oder Effizienz bringt.</p>
+          <article class="kmu-card kmu-card-photo reveal-up delay-1">
+            <figure class="kmu-media-frame">
+              <img src="images/kmu-step-1.jpg" alt="Whiteboard-Szene zur Frage, wo KI im Unternehmen Sinn macht" width="512" height="512" loading="lazy" />
+              <span class="kmu-photo-badge"><i class="fa-solid fa-bullseye" aria-hidden="true"></i></span>
+            </figure>
+            <div class="kmu-card-body">
+              <h3>Wo KI wirklich Sinn macht</h3>
+              <p>Konkrete Stellen in Ihrem Unternehmen, wo KI Entlastung, Klarheit oder Effizienz bringt.</p>
+            </div>
           </article>
-          <article class="kmu-card reveal-up delay-2">
-            <div class="kmu-icon" aria-hidden="true"><i class="fa-regular fa-clock"></i></div>
-            <h3>Welche Aufgaben automatisierbar sind</h3>
-            <p>Repetitive Prozesse, die Zeit kosten und bei denen KI sofort helfen kann.</p>
+          <article class="kmu-card kmu-card-photo reveal-up delay-2">
+            <figure class="kmu-media-frame">
+              <img src="images/kmu-step-2.jpg" alt="Laptop-Szene mit repetitiver Arbeit und Daten, die automatisiert werden kann" width="512" height="512" loading="lazy" />
+              <span class="kmu-photo-badge"><i class="fa-regular fa-clock" aria-hidden="true"></i></span>
+            </figure>
+            <div class="kmu-card-body">
+              <h3>Welche Aufgaben automatisierbar sind</h3>
+              <p>Repetitive Prozesse, die Zeit kosten und bei denen KI sofort helfen kann.</p>
+            </div>
           </article>
-          <article class="kmu-card reveal-up delay-3">
-            <div class="kmu-icon" aria-hidden="true"><i class="fa-solid fa-ranking-star" aria-hidden="true"></i></div>
-            <h3>Was zuerst umgesetzt werden sollte</h3>
-            <p>Eine klare Priorisierung nach Aufwand und Wirkung – damit Sie mit dem Richtigen beginnen.</p>
+          <article class="kmu-card kmu-card-photo reveal-up delay-3">
+            <figure class="kmu-media-frame">
+              <img src="images/kmu-step-3.jpg" alt="Team entscheidet gemeinsam über Prioritäten mit Karten und Notizen" width="512" height="512" loading="lazy" />
+              <span class="kmu-photo-badge"><i class="fa-solid fa-ranking-star" aria-hidden="true"></i></span>
+            </figure>
+            <div class="kmu-card-body">
+              <h3>Was zuerst umgesetzt werden sollte</h3>
+              <p>Eine klare Priorisierung nach Aufwand und Wirkung – damit Sie mit dem Richtigen beginnen.</p>
+            </div>
           </article>
-          <article class="kmu-card reveal-up delay-1">
-            <div class="kmu-icon" aria-hidden="true"><i class="fa-regular fa-circle-xmark"></i></div>
-            <h3>Wo KI keinen Sinn macht</h3>
-            <p>Ehrliche Einschätzung, was nicht passt oder noch zu früh wäre. Keine Spielereien, keine Luftschlösser.</p>
+          <article class="kmu-card kmu-card-photo reveal-up delay-1">
+            <figure class="kmu-media-frame">
+              <img src="images/kmu-step-4.jpg" alt="Beratungssituation, in der eine KI-Idee kritisch und ehrlich eingeordnet wird" width="512" height="512" loading="lazy" />
+              <span class="kmu-photo-badge"><i class="fa-regular fa-circle-xmark" aria-hidden="true"></i></span>
+            </figure>
+            <div class="kmu-card-body">
+              <h3>Wo KI keinen Sinn macht</h3>
+              <p>Ehrliche Einschätzung, was nicht passt oder noch zu früh wäre. Keine Spielereien, keine Luftschlösser.</p>
+            </div>
           </article>
-          <article class="kmu-card reveal-up delay-2">
-            <div class="kmu-icon" aria-hidden="true"><i class="fa-regular fa-map"></i></div>
-            <h3>Welche nächsten Schritte realistisch sind</h3>
-            <p>Ein konkreter Fahrplan, den Sie selbst oder mit Unterstützung umsetzen können.</p>
+          <article class="kmu-card kmu-card-photo reveal-up delay-2">
+            <figure class="kmu-media-frame">
+              <img src="images/kmu-step-5.jpg" alt="Arbeitsgruppe plant realistische nächste Schritte für die Einführung von KI" width="512" height="512" loading="lazy" />
+              <span class="kmu-photo-badge"><i class="fa-regular fa-map" aria-hidden="true"></i></span>
+            </figure>
+            <div class="kmu-card-body">
+              <h3>Welche nächsten Schritte realistisch sind</h3>
+              <p>Ein konkreter Fahrplan, den Sie selbst oder mit Unterstützung umsetzen können.</p>
+            </div>
           </article>
-          <article class="kmu-card reveal-up delay-3">
-            <div class="kmu-icon" aria-hidden="true"><i class="fa-solid fa-toolbox" aria-hidden="true"></i></div>
-            <h3>Welche Ansätze und Tools passen</h3>
-            <p>Praxisnahe Empfehlungen zu Werkzeugen und Methoden, die zu Ihrem Betrieb passen.</p>
+          <article class="kmu-card kmu-card-photo reveal-up delay-3">
+            <figure class="kmu-media-frame">
+              <img src="images/kmu-step-6.jpg" alt="Vergleich verschiedener Tools und Methoden auf einem Laptop im Meeting" width="512" height="512" loading="lazy" />
+              <span class="kmu-photo-badge"><i class="fa-solid fa-toolbox" aria-hidden="true"></i></span>
+            </figure>
+            <div class="kmu-card-body">
+              <h3>Welche Ansätze und Tools passen</h3>
+              <p>Praxisnahe Empfehlungen zu Werkzeugen und Methoden, die zu Ihrem Betrieb passen.</p>
+            </div>
           </article>
         </div>
         <div class="kmu-cta-strip reveal-up delay-3">
@@ -581,7 +633,7 @@
           Was andere über<br />Nando sagen
         </h2>
         <p class="section-intro reveal-up delay-2">
-          Neun echte LinkedIn-Empfehlungen von Menschen aus Beratung, Training, Vertrieb und Unternehmertum.
+          Echte LinkedIn-Empfehlungen von Menschen aus Beratung, Training, Vertrieb und Unternehmertum.
           Unterschiedliche Branchen, dieselbe Erfahrung.
         </p>
 
@@ -879,6 +931,10 @@
         <p class="section-intro reveal-up delay-2">
           Ich veröffentliche keine Tutorials und keine Hype-Artikel. Ich teile Beobachtungen.
         </p>
+        <div class="blog-actions reveal-up delay-2">
+          <a class="btn btn-ghost" href="/blog/">Alle Blogartikel lesen</a>
+          <a class="btn btn-primary" href="#kontakt">Über KI sprechen</a>
+        </div>
         <p class="beob-manifest reveal-up delay-3">
           Über Menschen.<br />
           Über Kommunikation.<br />
@@ -890,42 +946,68 @@
           <article class="beob-card reveal-up delay-1">
             <div class="beob-meta">
               <span class="beob-tag">Menschen</span>
-              <span class="beob-date">Jun 2025</span>
+              <span class="beob-date">Jun 2026</span>
             </div>
             <h3 class="beob-title">Warum Skepsis gegenüber KI ein gutes Zeichen ist</h3>
             <p class="beob-excerpt">
               Wer keine Bedenken hat, hat sich noch nicht wirklich damit auseinandergesetzt.
               Skepsis ist der Anfang von echter Auseinandersetzung.
             </p>
-            <a href="#kontakt" class="beob-read-more">
+            <a href="/blog/skepsis-gegenueber-ki-gutes-zeichen/" class="beob-read-more">
               Beobachtung lesen <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
             </a>
           </article>
           <article class="beob-card reveal-up delay-2">
             <div class="beob-meta">
               <span class="beob-tag">Kommunikation</span>
-              <span class="beob-date">Mai 2025</span>
+              <span class="beob-date">Mai 2026</span>
             </div>
             <h3 class="beob-title">KI schreibt glatte Texte. Glätte ist nicht Wahrheit.</h3>
             <p class="beob-excerpt">
               Was es bedeutet, wenn Inhalte professionell klingen, aber niemand dahintersteht –
               und was das für Führung und Vertrauen heisst.
             </p>
-            <a href="#kontakt" class="beob-read-more">
+            <a href="/blog/ki-schreibt-glatte-texte/" class="beob-read-more">
               Beobachtung lesen <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
             </a>
           </article>
           <article class="beob-card reveal-up delay-3">
             <div class="beob-meta">
               <span class="beob-tag">Alltag</span>
-              <span class="beob-date">Apr 2025</span>
+              <span class="beob-date">Apr 2026</span>
             </div>
             <h3 class="beob-title">Was ich nach 100+ KI-Experimenten gelernt habe</h3>
             <p class="beob-excerpt">
               Nicht die spektakulären Tools haben mich am meisten überrascht.
               Sondern die kleinen, stillen Veränderungen im Alltag.
             </p>
-            <a href="#kontakt" class="beob-read-more">
+            <a href="/blog/100-plus-ki-experimente/" class="beob-read-more">
+              Beobachtung lesen <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+            </a>
+          </article>
+          <article class="beob-card reveal-up delay-4">
+            <div class="beob-meta">
+              <span class="beob-tag">Einführung</span>
+              <span class="beob-date">Jul 2026</span>
+            </div>
+            <h3 class="beob-title">KI-Einführung scheitert selten an der Technologie. Meist am Prozess.</h3>
+            <p class="beob-excerpt">
+              Warum ein sauberer Ablauf, klare Verantwortung und ein realistischer Einstieg wichtiger sind als der nächste Tool-Hype.
+            </p>
+            <a href="/blog/ki-einfuehrung-scheitert-am-prozess/" class="beob-read-more">
+              Beobachtung lesen <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+            </a>
+          </article>
+          <article class="beob-card reveal-up delay-5">
+            <div class="beob-meta">
+              <span class="beob-tag">Fragen</span>
+              <span class="beob-date">Jul 2026</span>
+            </div>
+            <h3 class="beob-title">Die besten KI-Projekte beginnen mit den richtigen Fragen</h3>
+            <p class="beob-excerpt">
+              Welche Fragen vor dem ersten KI-Einsatz wirklich zählen und warum sie bessere Entscheidungen möglich machen.
+            </p>
+            <a href="/blog/gute-fragen-entscheiden-ueber-ki-nutzen/" class="beob-read-more">
               Beobachtung lesen <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
             </a>
           </article>
@@ -938,7 +1020,7 @@
           </div>
           <form class="newsletter-form" id="newsletter-form" aria-label="Newsletter-Anmeldung" novalidate>
             <div class="form-row">
-              <input type="email" id="nl-email" name="email" placeholder="ihre@email.ch" aria-label="E-Mail-Adresse" required />
+              <input type="email" id="nl-email" name="email" placeholder="name@firma.ch" aria-label="E-Mail-Adresse" required />
               <button type="submit" class="btn btn-primary">Abonnieren</button>
             </div>
             <p class="nl-success" id="nl-success" aria-live="polite" role="status"></p>
@@ -954,7 +1036,7 @@
           <div class="kontakt-header">
             <span class="section-label reveal-up">Kontakt</span>
             <h2 class="section-headline reveal-up delay-1">
-              Lassen Sie uns<br />gemeinsam denken.
+              <span class="formality-sie">Lassen Sie uns</span><span class="formality-du">Lass uns</span><br />gemeinsam denken.
             </h2>
             <p class="section-intro reveal-up delay-2">
               Ob KI-Potenzialanalyse, Workshop, Referat oder eine konkrete Fragestellung:<br />
@@ -973,6 +1055,10 @@
                 <input type="email" id="kf-email" name="email" placeholder="name@firma.ch" required autocomplete="email" />
               </div>
               <div class="form-group">
+                <label for="kf-phone">Rückrufnummer</label>
+                <input type="tel" id="kf-phone" name="phone" placeholder="+41 79 123 45 67" autocomplete="tel" />
+              </div>
+              <div class="form-group">
                 <label for="kf-firma">Unternehmen</label>
                 <input type="text" id="kf-firma" name="firma" placeholder="Ihr Unternehmen" autocomplete="organization" />
               </div>
@@ -987,9 +1073,37 @@
                   <option value="sonstiges">Sonstiges</option>
                 </select>
               </div>
+              <div class="form-group">
+                <label for="kf-kontaktmethode">Bevorzugte Kontaktmethode</label>
+                <select id="kf-kontaktmethode" name="kontaktmethode">
+                  <option value="" selected>Bitte wählen</option>
+                  <option value="Anruf">Anruf</option>
+                  <option value="Mail">Mail</option>
+                  <option value="WhatsApp">WhatsApp</option>
+                  <option value="Mittagessen">Mittagessen</option>
+                  <option value="Treffen">Treffen</option>
+                  <option value="Besuch">Besuch</option>
+                  <option value="LinkedIn">LinkedIn</option>
+                  <option value="Instagram">Instagram</option>
+                  <option value="Zoommeeting">Zoommeeting</option>
+                  <option value="Teamsmeeting">Teamsmeeting</option>
+                  <option value="GoogleMeet">GoogleMeet</option>
+                </select>
+              </div>
               <div class="form-group form-group-full">
-                <label for="kf-nachricht">Was beschäftigt Sie gerade?</label>
-                <textarea id="kf-nachricht" name="nachricht" placeholder="Beschreiben Sie kurz, womit wir uns befassen sollen. Je konkreter, desto besser können Sie davon profitieren." rows="5" required></textarea>
+                <label for="kf-nachricht">
+                  <span class="formality-sie">Was beschäftigt Sie gerade?</span>
+                  <span class="formality-du">Was beschäftigt dich gerade?</span>
+                </label>
+                <textarea
+                  id="kf-nachricht"
+                  name="nachricht"
+                  placeholder="Beschreiben Sie kurz, womit wir uns befassen sollen. Je konkreter, desto besser können Sie davon profitieren."
+                  data-placeholder-sie="Beschreiben Sie kurz, womit wir uns befassen sollen. Je konkreter, desto besser können Sie davon profitieren."
+                  data-placeholder-du="Beschreib kurz, womit wir uns befassen sollen. Je konkreter, desto besser profitierst du davon."
+                  rows="5"
+                  required
+                ></textarea>
               </div>
               <div class="form-submit">
                 <button type="submit" class="btn btn-primary btn-large" id="submit-btn">
@@ -1064,10 +1178,11 @@
           <a href="#warum-nando">Erfahrung</a>
           <a href="#testimonials">Stimmen</a>
           <a href="#workshops">Workshops</a>
+          <a href="/blog/">Blog</a>
           <a href="#kontakt">Kontakt</a>
         </nav>
       </div>
-      <div class="footer-bottom">
+        <div class="footer-bottom">
         <p class="footer-copy">© 2025 Nando Tschäppät · Alle Rechte vorbehalten</p>
         <div class="footer-legal">
           <a href="/impressum" class="footer-legal-link">Impressum</a>
@@ -1075,6 +1190,8 @@
           <a href="/datenschutz" class="footer-legal-link">Datenschutz</a>
           <span aria-hidden="true">·</span>
           <a href="mailto:iN@ndo.ch" class="footer-legal-link">iN@ndo.ch</a>
+          <span aria-hidden="true">·</span>
+          <button type="button" class="footer-legal-link footer-legal-button" id="formality-trigger">Anrede ändern</button>
         </div>
       </div>
     </div>

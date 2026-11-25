@@ -4,8 +4,143 @@
    ============================================================ */
 'use strict';
 
+const HOSTNAME = window.location.hostname.replace(/^www\./, '').toLowerCase();
+
+if (HOSTNAME === 'ndo.ch' && window.location.pathname === '/') {
+  window.location.replace('/ndo.html');
+}
+
 const KI_SPARRING_CONFIG = window.KI_SPARRING_CONFIG || {};
-const BREVO_FORMS_ENDPOINT = KI_SPARRING_CONFIG.brevoFormsEndpoint || "https://deria.ch/api/brevo/forms";
+const BREVO_FORMS_ENDPOINT = KI_SPARRING_CONFIG.brevoFormsEndpoint || "https://api.cleverassistant.ch/api/brevo/forms";
+const FORMALITY_STORAGE_KEY = 'ki-sparring-formality';
+const FORMALITY_MODAL = document.getElementById('formality-modal');
+const FORMALITY_TRIGGER = document.getElementById('formality-trigger');
+const FORMALITY_REPLACEMENTS = [
+  [/Lassen Sie uns/g, 'Lass uns'],
+  [/Was Sie nach/g, 'Was du nach'],
+  [/Was Sie mitnehmen/g, 'Was du mitnimmst'],
+  [/Was beschäftigt Sie gerade\?/g, 'Was beschäftigt dich gerade?'],
+  [/Sie erhalten/g, 'Du erhältst'],
+  [/Sie schreiben mir, was Sie beschäftigt\./g, 'Du schreibst mir, was dich beschäftigt.'],
+  [/Bitte prüfen Sie Ihr E-Mail-Postfach für die Bestätigung\./g, 'Bitte prüf dein E-Mail-Postfach für die Bestätigung.'],
+  [/Ihre Anfrage/g, 'deine Anfrage'],
+  [/Ihrem Unternehmen/g, 'deinem Unternehmen'],
+  [/Ihr Unternehmen/g, 'dein Unternehmen'],
+  [/Ihre Arbeit/g, 'deine Arbeit'],
+  [/Ihnen/g, 'dir'],
+  [/Ihrem/g, 'deinem'],
+  [/Ihre/g, 'deine'],
+  [/Ihrer/g, 'deiner'],
+  [/Ihren/g, 'deinen'],
+  [/\bSie\b/g, 'du'],
+  [/\bIhr\b/g, 'dein']
+];
+
+function getFormalityPreference() {
+  return document.documentElement.dataset.formality === 'du' ? 'du' : 'sie';
+}
+
+function updateFormalityPlaceholders(formality) {
+  document.querySelectorAll('[data-placeholder-sie][data-placeholder-du]').forEach(el => {
+    const key = formality === 'du' ? 'placeholderDu' : 'placeholderSie';
+    const value = el.dataset[key];
+    if (value) el.setAttribute('placeholder', value);
+  });
+}
+
+function convertToDuLanguage() {
+  const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, {
+    acceptNode(node) {
+      const text = node.nodeValue || '';
+      if (!text.trim()) return NodeFilter.FILTER_REJECT;
+      const parent = node.parentElement;
+      if (!parent) return NodeFilter.FILTER_REJECT;
+      if (parent.closest('.formality-modal, script, style, noscript, textarea')) return NodeFilter.FILTER_REJECT;
+      return NodeFilter.FILTER_ACCEPT;
+    }
+  });
+
+  const nodes = [];
+  while (walker.nextNode()) nodes.push(walker.currentNode);
+
+  nodes.forEach(node => {
+    let text = node.nodeValue;
+    FORMALITY_REPLACEMENTS.forEach(([pattern, replacement]) => {
+      text = text.replace(pattern, replacement);
+    });
+    node.nodeValue = text;
+  });
+}
+
+function openFormalityModal() {
+  if (!FORMALITY_MODAL) return;
+  FORMALITY_MODAL.hidden = false;
+  FORMALITY_MODAL.setAttribute('aria-hidden', 'false');
+  document.body.style.overflow = 'hidden';
+  const firstButton = FORMALITY_MODAL.querySelector('[data-formality-choice]');
+  if (firstButton) firstButton.focus();
+}
+
+function closeFormalityModal() {
+  if (!FORMALITY_MODAL) return;
+  FORMALITY_MODAL.hidden = true;
+  FORMALITY_MODAL.setAttribute('aria-hidden', 'true');
+  document.body.style.overflow = '';
+}
+
+function setFormalityPreference(formality) {
+  const normalized = formality === 'du' ? 'du' : 'sie';
+  document.documentElement.dataset.formality = normalized;
+  try {
+    localStorage.setItem(FORMALITY_STORAGE_KEY, normalized);
+  } catch (error) {}
+  updateFormalityPlaceholders(normalized);
+  if (normalized === 'du') convertToDuLanguage();
+}
+
+function initFormalityPreference() {
+  let stored = null;
+  try {
+    stored = localStorage.getItem(FORMALITY_STORAGE_KEY);
+  } catch (error) {
+    stored = null;
+  }
+
+  if (stored === 'du' || stored === 'sie') {
+    setFormalityPreference(stored);
+    closeFormalityModal();
+    return;
+  }
+
+  document.documentElement.dataset.formality = 'sie';
+  updateFormalityPlaceholders('sie');
+  openFormalityModal();
+}
+
+initFormalityPreference();
+
+if (FORMALITY_MODAL) {
+  FORMALITY_MODAL.querySelectorAll('[data-formality-choice]').forEach(button => {
+    button.addEventListener('click', () => {
+      const formality = button.getAttribute('data-formality-choice') || 'sie';
+      setFormalityPreference(formality);
+      closeFormalityModal();
+      if (formality === 'sie') {
+        window.location.reload();
+      }
+    });
+  });
+}
+
+if (FORMALITY_TRIGGER) {
+  FORMALITY_TRIGGER.addEventListener('click', () => {
+    try {
+      localStorage.removeItem(FORMALITY_STORAGE_KEY);
+    } catch (error) {}
+    document.documentElement.dataset.formality = 'sie';
+    openFormalityModal();
+  });
+}
 
 // ── 1. PROGRESS BAR ──────────────────────────────────────────
 (function() {
@@ -299,8 +434,10 @@ const BREVO_FORMS_ENDPOINT = KI_SPARRING_CONFIG.brevoFormsEndpoint || "https://d
     const data = {
       name:      form.elements['name'].value.trim(),
       email:     form.elements['email'].value.trim(),
+      phone:     form.elements['phone'].value.trim(),
       firma:     form.elements['firma'].value.trim(),
       interesse: form.elements['interesse'].value,
+      kontaktmethode: form.elements['kontaktmethode'].value,
       nachricht: form.elements['nachricht'].value.trim(),
       timestamp: new Date().toISOString(),
     };
@@ -313,8 +450,10 @@ const BREVO_FORMS_ENDPOINT = KI_SPARRING_CONFIG.brevoFormsEndpoint || "https://d
           kind: 'lead',
           name: data.name,
           email: data.email,
+          phone: data.phone,
           company: data.firma,
           interest: data.interesse,
+          preferredContactMethod: data.kontaktmethode,
           message: data.nachricht,
           source: window.location.href,
           timestamp: data.timestamp
@@ -323,8 +462,11 @@ const BREVO_FORMS_ENDPOINT = KI_SPARRING_CONFIG.brevoFormsEndpoint || "https://d
       const payload = await response.json().catch(() => ({}));
       if (!response.ok) throw new Error(payload.error || 'Formular konnte nicht gesendet werden.');
       successEl.className = 'form-success success';
-      successEl.textContent = '✓ Ihre Anfrage wurde in Brevo erfasst.';
+      successEl.textContent = getFormalityPreference() === 'du'
+        ? '✓ Vielen Dank für deine Anfrage.'
+        : '✓ Vielen Dank für Ihre Anfrage.';
       form.reset();
+      updateFormalityPlaceholders(getFormalityPreference());
     } catch (error) {
       successEl.className = 'form-success error';
       successEl.textContent = error instanceof Error ? error.message : 'Fehler – bitte später erneut versuchen.';
@@ -357,7 +499,9 @@ const BREVO_FORMS_ENDPOINT = KI_SPARRING_CONFIG.brevoFormsEndpoint || "https://d
       });
       const payload = await response.json().catch(() => ({}));
       if (!response.ok) throw new Error(payload.error || 'Newsletter konnte nicht gesendet werden.');
-      success.textContent = '✓ Bitte prüfen Sie Ihr E-Mail-Postfach für die Bestätigung.';
+      success.textContent = getFormalityPreference() === 'du'
+        ? '✓ Bitte prüf dein E-Mail-Postfach für die Bestätigung.'
+        : '✓ Bitte prüfen Sie Ihr E-Mail-Postfach für die Bestätigung.';
       form.reset();
     } catch (error) {
       success.textContent = error instanceof Error ? error.message : 'Fehler – bitte später erneut versuchen.';
