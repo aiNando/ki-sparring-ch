@@ -30,9 +30,9 @@
 ## 🖼️ Bilder
 
 ### Nando-Portraits
-- `images/nando-portrait-outdoor.jpg` — Hero-Bild (230KB)
+- `images/nando-portrait-outdoor-v2.jpg` — Hero-Bild (110KB)
 - `images/nando-portrait.jpg` — Kontakt-Sidebar Business-Portrait (8KB)
-- `images/nando-beratung.jpg`, `nando-desk.jpg`, `nando-workshop.jpg` — Content-Bilder
+- `images/nando-beratung-v2.jpg`, `nando-desk-v2.jpg`, `nando-workshop-v2.jpg` — Content-Bilder
 
 ### Testimonial-Avatare (alle v2, eager loading, Cache-Busted)
 | Datei | Grösse |
@@ -86,10 +86,10 @@ css/style.css                 → Premium-CSS (~590 Zeilen)
 js/main.js                    → Interaktionen & Formulare (342 Zeilen, reviewed)
 images/
   nando-portrait.jpg          → Kontakt-Sidebar Portrait
-  nando-portrait-outdoor.jpg  → Hero
-  nando-beratung.jpg          → Content
-  nando-desk.jpg              → Content
-  nando-workshop.jpg          → Content
+  nando-portrait-outdoor-v2.jpg → Hero
+  nando-beratung-v2.jpg       → Content
+  nando-desk-v2.jpg           → Content
+  nando-workshop-v2.jpg       → Content
   testimonial-*-v2.*          → 9 Testimonial-Avatare (eager loading)
   logos/
     logo-apple.png            → Apple Logo PNG
