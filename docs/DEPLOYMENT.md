@@ -2,6 +2,10 @@
 
 Stand: 25.11.2026 · Aufgabe FührungsCockpit #21 · Bezug: Issue #1
 
+> **Entscheid Nando (25.11.2026):** Veröffentlicht wird manuell per **Infomaniak WebFTP durch Grok** (Muster C).
+> GitHub `main` bleibt die Quelle der Wahrheit: Änderungen kommen per PR, nach dem Merge wird Grok informiert und lädt hoch.
+> Anleitung: [Abschnitt 5](#5-upload-per-webftp-durch-grok).
+
 Legende: **bestätigt** = live oder im Code nachgewiesen · **vermutet** = Indiz, nicht bewiesen · **nicht getestet**
 
 ## 1. Live-Stand vs. Repository
@@ -40,7 +44,7 @@ Mit dem ersten Commit dieses PRs ist der Live-Stand 1:1 im Repo. Erst danach sin
 | Kosten | im heutigen Paket? (prüfen) | Upgrade auf Paket mit SFTP/SSH | 0 |
 | Risiko | `ndo.html` oder fremde Dateien je nach Setup überschrieben oder sichtbar | gering, wenn ohne `--delete` | Drift wie jetzt (5 Monate) |
 
-**Empfehlung: B.** Begründung:
+**Ursprüngliche Empfehlung: B.** Entschieden wurde C mit Grok (siehe oben). Die Begründung bleibt als Referenz stehen, falls später automatisiert werden soll:
 
 1. **Der heutige Fehler ist Drift.** Live und Repo sind seit Juli auseinander, weil manuell (C) veröffentlicht wurde. Nur A und B machen GitHub zur Quelle der Wahrheit.
 2. **Freigabe bleibt bei Nando.** Agenten liefern nur PRs. Der Deploy läuft über eine GitHub-Environment `production` mit Pflicht-Freigabe. Kein Agent braucht Hosting-Zugangsdaten.
@@ -99,3 +103,40 @@ Issue #1 war das Onboarding für Manus mit Audit-Bericht. Die Audit-Teile (Schri
 | #30018 | Du/Sie | Du-Umstellung beschädigte Blogartikel („Skepsis … du ist oft …“). Jetzt nur noch auf der Startseite, Grammatik korrigiert, „Termin wählst du“ auch im Sie-Modus behoben. | – |
 | #30018 | Ort | Separater Commit: „Zürich“ → „Wollerau, Raum Zürich“ (passend zum Impressum) | Behalten oder Commit verwerfen? |
 | #30018 | MWST | **nicht geändert.** „ab CHF 690“ steht ohne MWST-Hinweis. | Ist Nando MWST-pflichtig? Ja: „CHF 690 zzgl. 8,1 % MWST“ (oder inkl.) plus UID/MWST-Nr. im Impressum. Nein: „CHF 690 (kein MWST-Zuschlag)“ oder ohne Zusatz lassen. |
+
+## 5. Upload per WebFTP durch Grok
+
+Regel: **Was auf dem Server liegt, muss vorher in `main` sein.** Nie direkt auf dem Server ändern, sonst laufen Live-Seite und Repo wieder auseinander.
+
+### Ablauf bei jedem Upload
+
+1. **Sichern:** Im WebFTP die Dateien herunterladen, die gleich überschrieben werden. Beim ersten Upload: den ganzen Webspace sichern.
+2. **Hochladen:** nur die Dateien aus `main`, die sich seit dem letzten Upload geändert haben, jeweils mit gleichem Pfad.
+   - **Nie hochladen:** `docs/`, `README.md`, `.tables/`, `.git/`, `.github/`
+   - **Nie löschen:** `ndo.html` (gehört zu ndo.ch) und Dateien, die nicht im Repo sind.
+   - **Reihenfolge:** zuerst Bilder, dann `css/` und `js/`, zuletzt die HTML-Dateien. So verweist keine Seite auf ein noch fehlendes Bild.
+3. **Prüfen** (Browser, privates Fenster):
+   - Seite lädt, Bilder sichtbar, KI-Boost-Abschnitt da
+   - Kontaktformular sendet (Testanfrage mit eigener Adresse)
+   - `http://ki-sparring.ch` und `https://www.ki-sparring.ch` landen auf `https://ki-sparring.ch/`
+   - `https://ndo.ch` funktioniert weiterhin
+4. **Melden:** Datum und hochgeladenen Commit (Hash von `main`) an Nando bzw. ins FührungsCockpit.
+5. **Rückgängig:** bei Problemen die gesicherten Dateien aus Schritt 1 wieder hochladen.
+
+### Erster Upload nach PR #2 und PR #3
+
+Stand Server: 02.07.2026. Folgende Dateien hochladen bzw. ersetzen:
+
+| Datei | Was |
+|---|---|
+| `images/nando-beratung-v2.jpg`, `images/nando-desk-v2.jpg`, `images/nando-workshop-v2.jpg`, `images/nando-portrait-outdoor-v2.jpg` | neue Fotos |
+| `css/style.css`, `js/main.js` | KI-Boost, Formular-Fallback, Du/Sie-Korrektur, Menü |
+| `index.html` | Startseite inkl. KI-Boost |
+| `datenschutz/index.html` | neue Datenschutzerklärung |
+| `ueber-nando/index.html`, `blog/index.html` | Ort, Foto-Verweise |
+| `blog/*/index.html` (alle 6 Artikel) | Foto-Verweise |
+| `.htaccess` | HTTPS- und www-Weiterleitung, siehe Achtung |
+
+**Achtung `.htaccess`:** Die bestehende Live-Datei zuerst herunterladen und mit der Version im Repo vergleichen. Enthält die Live-Datei Regeln, die im Repo fehlen, diese übernehmen und den Unterschied melden. Nach dem Upload sofort Schritt 3 prüfen. Bei einer Weiterleitungsschleife oder einem Fehler 500 die gesicherte Datei zurückspielen.
+
+Die alten Fotos (`nando-beratung.jpg` usw.) können auf dem Server bleiben. Sie werden nicht mehr verlinkt.
