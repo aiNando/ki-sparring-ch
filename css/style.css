@@ -690,6 +690,7 @@ html:not([data-formality="du"]) .formality-du { display: none !important; }
 .price-reassurance i { color: var(--gold); margin-top: 2px; flex-shrink: 0; }
 
 /* KI-Boost */
+#ki-boost { scroll-margin-top: var(--nav-h); }
 .analyse-price-card [hidden] { display: none !important; }
 .section-boost { border-top: 1px solid rgba(255,255,255,.08); }
 .boost-outcome { font-family: var(--font-serif); font-size: clamp(1.1rem, 2vw, 1.3rem); color: var(--white); line-height: 1.45; }
