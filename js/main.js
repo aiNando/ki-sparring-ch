@@ -55,6 +55,13 @@ function updateFormalityPlaceholders(formality) {
   });
 }
 
+function updateDocumentTitle(formality) {
+  const titleEl = document.querySelector('title[data-title-sie][data-title-du]');
+  if (!titleEl) return;
+  const next = formality === 'du' ? titleEl.dataset.titleDu : titleEl.dataset.titleSie;
+  if (next) document.title = next;
+}
+
 function convertToDuLanguage() {
   const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, {
     acceptNode(node) {
@@ -102,6 +109,7 @@ function setFormalityPreference(formality) {
     localStorage.setItem(FORMALITY_STORAGE_KEY, normalized);
   } catch (error) {}
   updateFormalityPlaceholders(normalized);
+  updateDocumentTitle(normalized);
   if (normalized === 'du' && FORMALITY_CONVERSION_ENABLED) convertToDuLanguage();
 }
 
@@ -121,6 +129,7 @@ function initFormalityPreference() {
 
   document.documentElement.dataset.formality = 'sie';
   updateFormalityPlaceholders('sie');
+  updateDocumentTitle('sie');
   openFormalityModal();
 }
 
@@ -145,6 +154,7 @@ if (FORMALITY_TRIGGER) {
       localStorage.removeItem(FORMALITY_STORAGE_KEY);
     } catch (error) {}
     document.documentElement.dataset.formality = 'sie';
+    updateDocumentTitle('sie');
     openFormalityModal();
   });
 }
