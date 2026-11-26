@@ -158,7 +158,8 @@ html:not([data-formality="du"]) .formality-du { display: none !important; }
   max-width: var(--cw); margin: 0 auto; padding: 0 var(--cpad);
   height: 100%; display: flex; align-items: center; justify-content: space-between; gap: 20px;
 }
-.nav-logo { font-family: var(--font-serif); font-size: 1.25rem; font-weight: 500; display: flex; align-items: baseline; gap: 1px; flex-shrink: 0; }
+.nav-logo { font-family: var(--font-serif); font-size: 1.0625rem; font-weight: 500; display: flex; align-items: baseline; gap: 1px; flex-shrink: 0; white-space: nowrap; }
+.nav-logo .logo-dot { font-size: 1.23rem; }
 .logo-dot { color: var(--blue); font-size: 1.45rem; line-height: 1; }
 .nav-links { display: flex; align-items: center; gap: 2px; }
 .nav-link { padding: 7px 12px; font-size: .83rem; font-weight: 450; color: var(--ink-60); border-radius: 8px; transition: color .2s, background .2s; }
@@ -1332,8 +1333,8 @@ html:not([data-formality="du"]) .formality-du { display: none !important; }
   .trust-sep:nth-child(4) { display: none; }
   .trust-sub { max-width: 140px; }
 }
-/* Burger-Menü ab 860px: Mit KI-Boost passen 7 Links nicht mehr in eine Zeile */
-@media (max-width: 860px) {
+/* Burger-Menü ab 1140px: Der längere Schriftzug und die 7 Startseiten-Links passen sonst nicht in eine Zeile */
+@media (max-width: 1140px) {
   .nav-toggle { display: flex; }
   .nav-links { position: fixed; top: var(--nav-h); left: 0; right: 0; background: rgba(247,245,240,.98); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); flex-direction: column; align-items: stretch; padding: 10px 14px 18px; gap: 3px; border-top: 1px solid var(--ink-15); transform: translateY(-110%); opacity: 0; transition: transform .4s var(--ease), opacity .4s var(--ease); pointer-events: none; box-shadow: 0 20px 40px rgba(17,17,17,.08); }
   .nav-links.open { transform: translateY(0); opacity: 1; pointer-events: all; }
