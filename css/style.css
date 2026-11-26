@@ -936,8 +936,8 @@ html:not([data-formality="du"]) .formality-du { display: none !important; }
 .info-highlight strong { display: block; font-size: .86rem; font-weight: 600; color: var(--ink); margin-bottom: 2px; }
 .info-highlight p { font-size: .78rem; color: var(--ink-60); margin: 0; }
 .info-hint { font-size: .7rem !important; color: var(--gold) !important; margin-top: 2px !important; }
-.info-standort { display: flex; align-items: center; gap: 9px; font-size: .8rem; color: var(--ink-60); }
-.info-standort i { color: var(--gold); }
+.info-standort { display: flex; align-items: flex-start; gap: 9px; font-size: .8rem; color: var(--ink-60); }
+.info-standort i { color: var(--gold); margin-top: 3px; }
 
 /* ── 17. FOOTER ──────────────────────────────────────────────── */
 .site-footer { padding: clamp(32px, 5vw, 52px) 0; border-top: 1px solid var(--ink-15); background: var(--ink); }
@@ -946,6 +946,8 @@ html:not([data-formality="du"]) .formality-du { display: none !important; }
 .footer-logo .logo-text { font-family: var(--font-serif); font-size: 1.2rem; font-weight: 500; color: var(--white); }
 .footer-logo .logo-dot { color: var(--blue); font-size: 1.4rem; }
 .footer-brand p { font-size: .78rem; color: rgba(255,255,255,.4); margin-top: 4px; }
+.footer-locations { list-style: none; margin: 12px 0 0; padding: 0; display: grid; gap: 2px; }
+.footer-locations li { font-size: .78rem; color: rgba(255,255,255,.4); line-height: 1.5; }
 .footer-nav { display: flex; gap: 20px; flex-wrap: wrap; align-items: center; }
 .footer-nav a { font-size: .83rem; color: rgba(255,255,255,.5); transition: color .2s; }
 .footer-nav a:hover { color: var(--white); }
